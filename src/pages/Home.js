@@ -10,13 +10,24 @@ const Home = () => {
     const [curDate, setCurDate] = useState(new Date());
     const headText = getStringDate(curDate);
 
+    const decreaseDate = () => {
+        setCurDate(
+            new Date(curDate.getFullYear(), curDate.getMonth(), curDate.getDate()-1)
+        );
+    }
+
+    const increaseDate = () => {
+        setCurDate(
+            new Date(curDate.getFullYear(), curDate.getMonth(), curDate.getDate()+1)
+        );
+    }
 
     return (
         <div>
             <MyHeader 
                 headText={headText}
-                leftChild={"<"}
-                rightChild={">"}
+                leftChild={<MyButton text={"<"} onClick={decreaseDate} />}
+                rightChild={<MyButton text={">"} onClick={increaseDate} />}
             />
         </div>
     );
