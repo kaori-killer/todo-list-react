@@ -1,0 +1,14 @@
+@import "./css/shared/index.css";
+@import "./css/ui/index.css";
+
+html,
+body {
+    margin: 0px;
+    height: 100%;
+    background-color: #f1f5f9;
+}
+
+#app {
+    max-width: 960px;
+    margin: 0 auto;
+  }
