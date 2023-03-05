@@ -6,10 +6,10 @@ import MyButton from "./MyButton";
 const TodoList = ({ todoList, curDate }) => {
     
     const contentRef = useRef();
+    const editContentRef = useRef();
     const [content, setContent] = useState("");
-    const [isEdit, setIsEdit] = useState(false);
 
-    const { onCreate } = useContext(TodoDispatchContext);
+    const { onCreate, onRemove, onEdit, onChangeIsEditStatus } = useContext(TodoDispatchContext);
 
     const getSortedTodoList = () => {
         const copyList = JSON.parse(JSON.stringify(todoList));
@@ -18,14 +18,24 @@ const TodoList = ({ todoList, curDate }) => {
     }
 
     const handleSubmit = () => {
+        document.querySelector("#todo-name").value = "";
+
         if(content.length < 1) {
             contentRef.current.focus();
             return;
         }
 
-        if(!isEdit){
-            onCreate(curDate, content);
+        onCreate(curDate, content);
+    }
+
+    const handleRemove = (targetId) => {
+        if(window.confirm("정말 삭제하시겠습니까?")){
+            onRemove(targetId);
         }
+    }
+
+    const handleOnChangeIsEditStatus = (targetId, content) => {
+        onChangeIsEditStatus(targetId, content);
     }
 
     return (
@@ -42,6 +52,7 @@ const TodoList = ({ todoList, curDate }) => {
                         </label>
                         <input
                             type="text"
+                            id="todo-name"
                             className="input-field"
                             ref={contentRef}
                             placeholder="할 일"
@@ -56,27 +67,46 @@ const TodoList = ({ todoList, curDate }) => {
                 </form>
                 <ul className="mt-3 pl-0">
                     {getSortedTodoList().map((it)=>{
-                            return(
+                        return (
                             <li key={it.id} className="d-flex items-center py-2">
-                                <span className="w-100 pl-2">{it.content}</span>
-                                <MyButton 
-                                    type={"positive"}
-                                    text={"완료"}
-                                />
-                                <MyButton 
-                                    text={"수정"}
-                                />
-                                {/* {isEdit && <MyButton
-                                    type={"negative"}
-                                    text={"완료"}
-                                />}
-                                {isEdit && <MyButton
-                                    type={"negative"}
-                                    text={"삭제"}
-                                />} */}
+                            {it.isEdit ? (
+                                    <form className="d-flex w-100" onSubmit={(e)=>{e.preventDefault()}}> 
+                                        <input
+                                            type="text"
+                                            id="todo-name"
+                                            className="input-update-field"
+                                            ref={editContentRef}
+                                            defaultValue={it.content}
+                                            autoComplete="off"
+                                        />
+                                        <MyButton
+                                        type={"positive"}
+                                        text={"확인"}
+                                        />
+                                        <MyButton
+                                        type={"negative"}
+                                        text={"삭제"}
+                                        onClick={()=>handleRemove(it.id)}
+                                        />
+                                    </ form>
+                                    ) : (             
+                                        <>                       
+                                            <span className="w-100 pl-2">{it.content}</span>
+                                            <MyButton 
+                                            type={"positive"}
+                                            text={"완료"}
+                                            />
+                                            <MyButton 
+                                            text={"수정"}
+                                            onClick={()=>handleOnChangeIsEditStatus(it.id, it.content)}
+                                            />
+                                        </>
+                                    )
+                                }    
                             </li>
-                        );
-                    })}
+                            )
+                        })
+                    }
                 </ul>
             </div>
         </div>

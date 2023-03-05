@@ -5,11 +5,12 @@ import { useEffect } from 'react';
 import MyHeader  from '../components/MyHeader';
 import MyButton from '../components/MyButton';
 import TodoList from '../components/TodoList';
+
 import getStringDate from '../util/date';
 
 const Home = () => {
     const todoList = useContext(TodoStateContext);
-    console.log(todoList);
+    // console.log(todoList);
 
     const [data, setData] = useState([]);
     const [curDate, setCurDate] = useState(new Date());

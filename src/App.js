@@ -22,6 +22,14 @@ const reducer = (state, action) => {
       newState = [newItem, ...state];
       break;
     }
+    case 'REMOVE': {
+      newState = state.filter((it)=> it.id !== action.targetId);
+      break;
+    }
+    case 'EDIT': {
+      newState = state.map((it)=>it.id === action.data.id ? {...action.data} : it)
+      break;
+    }
     default:
       return state;
   }
@@ -37,31 +45,8 @@ function App() {
 
   useEffect(() => {
     const localData = localStorage.getItem("todo");
-    // const localData = [
-    //     {
-    //       id: 1,
-    //       date: getStringDate(new Date()),
-    //       content: "hello1",
-    //     },
-    //     {
-    //       id: 2,
-    //       date: getStringDate(new Date()),
-    //       content: "hello2",
-    //     },
-    //     {
-    //       id: 3,
-    //       date: getStringDate(new Date()),
-    //       content: "hello3",
-    //     },
-    //     {
-    //       id: 4,
-    //       date: '2023-03-04',
-    //       content: "hello4"
-    //     }
-    // ].sort((a, b)=>parseInt(b.id)-parseInt(a.id));
-    if(localData) {
+        if(localData) {
       const todoList = JSON.parse(localData).sort((a, b)=>parseInt(b.id) - parseInt(a.id));
-      // const todoList = localData;
       if(todoList.length >= 1) {
         dataId.current = parseInt(todoList[0].id) + 1;
       }
@@ -80,6 +65,7 @@ function App() {
           id: dataId.current,
           date: date,
           content,
+          isEdit: false,
         }
       }
     );
@@ -95,11 +81,41 @@ function App() {
     )
   };
 
+  const onEdit = (targetId, date, content, isEdit) => {
+    dispatch({
+      type: "EDIT",
+      data: {
+        id: targetId,
+        date,
+        content,
+        isEdit: false,
+      }
+    });
+  }
+
+  const onChangeIsEditStatus = (targetId, content) => {
+    data.map((it)=>{
+      if(it.id === targetId){
+        dispatch({
+          type: "EDIT",
+          data: {
+            id: targetId,
+            date: it.date,
+            content,
+            isEdit: true
+          }
+        });
+      } 
+    })
+  }
+
   return (
     <TodoStateContext.Provider value={{data}}>
       <TodoDispatchContext.Provider value={{
         onCreate,
         onRemove,
+        onEdit,
+        onChangeIsEditStatus,
       }}>
         <BrowserRouter>
           <div className="App">
