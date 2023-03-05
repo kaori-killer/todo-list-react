@@ -9,7 +9,7 @@ const TodoList = ({ todoList, curDate }) => {
     const editContentRef = useRef();
     const [content, setContent] = useState("");
 
-    const { onCreate, onRemove, onEdit, onChangeIsEditStatus } = useContext(TodoDispatchContext);
+    const { onCreate, onRemove, onEdit, onChangeIsEditStatus, onComplete } = useContext(TodoDispatchContext);
 
     const getSortedTodoList = () => {
         const copyList = JSON.parse(JSON.stringify(todoList));
@@ -34,8 +34,17 @@ const TodoList = ({ todoList, curDate }) => {
         }
     }
 
-    const handleOnChangeIsEditStatus = (targetId, content) => {
-        onChangeIsEditStatus(targetId, content);
+    const handleOnChangeIsEditStatus = (targetId) => {
+        onChangeIsEditStatus(targetId);
+    }
+
+    const handleEdit = (targetId) => {
+        const newContent = document.querySelector(`#todo-name-${targetId}`).value;
+        onEdit(targetId, newContent);
+    }
+
+    const handleComplete = (targetId) => {
+        onComplete(targetId);
     }
 
     return (
@@ -73,7 +82,7 @@ const TodoList = ({ todoList, curDate }) => {
                                     <form className="d-flex w-100" onSubmit={(e)=>{e.preventDefault()}}> 
                                         <input
                                             type="text"
-                                            id="todo-name"
+                                            id={`todo-name-${it.id}`}
                                             className="input-update-field"
                                             ref={editContentRef}
                                             defaultValue={it.content}
@@ -82,6 +91,7 @@ const TodoList = ({ todoList, curDate }) => {
                                         <MyButton
                                         type={"positive"}
                                         text={"확인"}
+                                        onClick={()=>handleEdit(it.id)}
                                         />
                                         <MyButton
                                         type={"negative"}
@@ -91,14 +101,15 @@ const TodoList = ({ todoList, curDate }) => {
                                     </ form>
                                     ) : (             
                                         <>                       
-                                            <span className="w-100 pl-2">{it.content}</span>
+                                            <span className={["w-100", "pl-2", `${it.isComplete ? "completed" : ""}`].join(" ")}>{it.content}</span>
                                             <MyButton 
                                             type={"positive"}
                                             text={"완료"}
+                                            onClick={()=>handleComplete(it.id)}
                                             />
                                             <MyButton 
                                             text={"수정"}
-                                            onClick={()=>handleOnChangeIsEditStatus(it.id, it.content)}
+                                            onClick={()=>handleOnChangeIsEditStatus(it.id)}
                                             />
                                         </>
                                     )

@@ -24,6 +24,7 @@ const reducer = (state, action) => {
     }
     case 'REMOVE': {
       newState = state.filter((it)=> it.id !== action.targetId);
+      newState = newState.length ? newState : ["제발 reRender 원해요 왜 안돼~~~~"];
       break;
     }
     case 'EDIT': {
@@ -66,6 +67,7 @@ function App() {
           date: date,
           content,
           isEdit: false,
+          isComplete: false,
         }
       }
     );
@@ -81,19 +83,7 @@ function App() {
     )
   };
 
-  const onEdit = (targetId, date, content, isEdit) => {
-    dispatch({
-      type: "EDIT",
-      data: {
-        id: targetId,
-        date,
-        content,
-        isEdit: false,
-      }
-    });
-  }
-
-  const onChangeIsEditStatus = (targetId, content) => {
+  const onEdit = (targetId, content) => {
     data.map((it)=>{
       if(it.id === targetId){
         dispatch({
@@ -102,12 +92,48 @@ function App() {
             id: targetId,
             date: it.date,
             content,
-            isEdit: true
+            isEdit: false,
+            isComplete: it.isComplete,
+          }
+        });
+      }
+    });
+  }
+
+  const onChangeIsEditStatus = (targetId) => {
+    data.map((it)=>{
+      if(it.id === targetId){
+        dispatch({
+          type: "EDIT",
+          data: {
+            id: targetId,
+            date: it.date,
+            content: it.content,
+            isEdit: true,
+            isComplete: it.isComplete,
+          }
+        });
+      } 
+    });
+  }
+
+  const onComplete= (targetId, content) => {
+    data.map((it)=>{
+      if(it.id === targetId){
+        dispatch({
+          type: "EDIT",
+          data: {
+            id: targetId,
+            date: it.date,
+            content: it.content,
+            isEdit: it.isEdit,
+            isComplete: !it.isComplete,
           }
         });
       } 
     })
   }
+
 
   return (
     <TodoStateContext.Provider value={{data}}>
@@ -116,6 +142,7 @@ function App() {
         onRemove,
         onEdit,
         onChangeIsEditStatus,
+        onComplete,
       }}>
         <BrowserRouter>
           <div className="App">
