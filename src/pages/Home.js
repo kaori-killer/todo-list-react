@@ -1,14 +1,27 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
+import { TodoStateContext } from '../App';
+import { useEffect } from 'react';
 
 import MyHeader  from '../components/MyHeader';
 import MyButton from '../components/MyButton';
+import TodoList from '../components/TodoList';
 import getStringDate from '../util/date';
 
 const Home = () => {
+    const todoList = useContext(TodoStateContext);
+    console.log(todoList);
 
     const [data, setData] = useState([]);
     const [curDate, setCurDate] = useState(new Date());
     const headText = getStringDate(curDate);
+
+    useEffect(() => {
+        if(todoList.data.length >= 1){
+            setData(
+                todoList.data.filter((it) => it.date === getStringDate(curDate))
+            );
+        }
+    }, [todoList, curDate]);
 
     const decreaseDate = () => {
         setCurDate(
@@ -23,12 +36,17 @@ const Home = () => {
     }
 
     return (
-        <div>
-            <MyHeader 
-                headText={headText}
-                leftChild={<MyButton text={"<"} onClick={decreaseDate} />}
-                rightChild={<MyButton text={">"} onClick={increaseDate} />}
-            />
+        <div className="px-12">
+            <div className="d-flex justify-center mt-5 w-100">
+                <div className="w-100">
+                    <MyHeader 
+                        headText={headText}
+                        leftChild={<MyButton text={"<"} onClick={decreaseDate} />}
+                        rightChild={<MyButton text={">"} onClick={increaseDate} />}
+                    />
+                    <TodoList todoList={data} />
+                </div>
+            </div>
         </div>
     );
 }

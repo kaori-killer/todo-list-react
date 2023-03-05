@@ -1,5 +1,4 @@
-@import "./css/shared/index.css";
-@import "./css/ui/index.css";
+@import "./css/index.css";
 
 html,
 body {
@@ -28,8 +27,8 @@ body {
     color: white;
 }
 
-a {
-    text-decoration: none;
+.btn:hover {
+    background-color: rgb(229, 231, 235);
 }
 
 main .wrapper {
@@ -37,25 +36,6 @@ main .wrapper {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
         0 4px 6px -2px rgba(0, 0, 0, 0.05);
     border-radius: 4px;
-}
-
-hr {
-    border: 0;
-    height: 1px;
-    background-color: lightgray;
-}
-
-ul li button {
-    width: 60px;
-    cursor: pointer;
-    height: auto;
-    border: none;
-    outline: none;
-    border-radius: 2rem;
-}
-
-ul li button:hover {
-    background-color: rgb(229, 231, 235);
 }
 
 .completed {
