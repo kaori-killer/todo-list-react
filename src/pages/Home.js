@@ -13,7 +13,6 @@ const Home = () => {
 
     const [data, setData] = useState([]);
     const [curDate, setCurDate] = useState(new Date());
-    const headText = getStringDate(curDate);
 
     useEffect(() => {
         if(todoList.data.length >= 1){
@@ -40,11 +39,11 @@ const Home = () => {
             <div className="d-flex justify-center mt-5 w-100">
                 <div className="w-100">
                     <MyHeader 
-                        headText={headText}
+                        headText={getStringDate(curDate)}
                         leftChild={<MyButton text={"<"} onClick={decreaseDate} />}
                         rightChild={<MyButton text={">"} onClick={increaseDate} />}
                     />
-                    <TodoList todoList={data} />
+                    <TodoList todoList={data} curDate={getStringDate(curDate)} />
                 </div>
             </div>
         </div>

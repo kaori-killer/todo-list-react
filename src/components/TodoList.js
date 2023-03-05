@@ -2,13 +2,11 @@ import { useState, useContext, useRef } from "react";
 import { TodoDispatchContext } from "../App";
 
 import MyButton from "./MyButton";
-import getStringDate from './../util/date';
 
-const TodoList = ({ todoList }) => {
+const TodoList = ({ todoList, curDate }) => {
     
     const contentRef = useRef();
     const [content, setContent] = useState("");
-    const [date, setDate] = useState(getStringDate(new Date()));
     const [isEdit, setIsEdit] = useState(false);
 
     const { onCreate } = useContext(TodoDispatchContext);
@@ -26,8 +24,7 @@ const TodoList = ({ todoList }) => {
         }
 
         if(!isEdit){
-            console.log(date)
-            onCreate(date, content);
+            onCreate(curDate, content);
         }
     }
 
